@@ -10,7 +10,7 @@ library(dplyr)
 library(htmltools)
 library(shinythemes)
 
-# Load data
+# Load data (look for download link in ReadMe file if needed)
 d1 <- as.data.frame(load("SA_Thresh_FINAL2.RData", envir = globalenv()))
 nhd <- st_read("NHD_Ca.geojson")
 
