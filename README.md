@@ -1,5 +1,5 @@
 
-# RB8_ShinyDashboard
+# Salinization thresholds for the Santa Ana Watershed
 
 A Shiny dashboard for the Salinization thresholds for the Santa Ana Watershed project from the SCCWRP Biology department (Jan, Raphael and Abel).
 
