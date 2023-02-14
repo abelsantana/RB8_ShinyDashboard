@@ -1,7 +1,7 @@
 
 # Salinization thresholds for the Santa Ana Watershed
 
-A Shiny dashboard for the Salinization thresholds for the Santa Ana Watershed project from the SCCWRP Biology department (Jan, Raphael and Abel).
+This shiny dashboard is for the Salinization thresholds for the Santa Ana Watershed project from the SCCWRP Biology department (Jan Walker, Raphael Mazor and Abel Santana).
 
 This dashboard is intended to help support waterboard staff identify thresholds for ionic parameters based on biological response models.
 Users should select one item from each drop-down menu, and then push the filter button.
