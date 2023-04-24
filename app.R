@@ -20,7 +20,7 @@ ui <- fluidPage(theme = shinytheme("yeti"),
     useShinyjs(),
     tags$div(
     h1("Salinization thresholds for the Santa Ana Watershed", align = "center"),
-    hr(),
+    hr(tags$sub("4/24/23 Version: 1")),
     p("This dashboard is intended to help support waterboard staff identify thresholds for ionic parameters based on biological response models. 
     Users should select one item from each drop-down menu, and then push the filter button. A map showing average thresholds for each segment in the Santa Ana watershed will be rendered, along with a table containing the plotted data. 
       For each segment, we report n (the number of months fitting the selected criteria), the minimum, maximum, average and standard deviation of E (i.e., the predicted natural background level of the parameter in the stream segment), and threshold. 
