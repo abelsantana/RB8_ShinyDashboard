@@ -24,16 +24,11 @@ ui <- fluidPage(theme = shinytheme("yeti"),
                tags$div(
                  h1("Salinization thresholds for the Santa Ana Watershed", align = "center"),
                  hr(tags$sub("4/24/23 Version: 1")),
-                 p("This dashboard is intended to help support waterboard staff identify thresholds for ionic parameters based on biological response models. 
-                    Users should select one item from each drop-down menu, and then push the filter button. A map showing average thresholds for each segment in the Santa Ana watershed will be rendered, along with a table containing the plotted data. 
-                    For each segment, we report n (the number of months fitting the selected criteria), the minimum, maximum, average and standard deviation of E (i.e., the predicted natural background level of the parameter in the stream segment), and threshold. 
-                    The download button will download a CSV file of the resulting rows, which may be joined to an NHD+ shapefile based on the unique stream segment identifier (COMID). 
-                    For additional information, contact Raphael Mazor (raphaelm@sccwrp.org).", align = "left"),
+                 p("Project Description Goes Here", align = "left"),
                              ),
                              ),
       
       tabPanel("visualize data",
-    
                 tags$div(
                 h1("Salinization thresholds for the Santa Ana Watershed", align = "center"),
                 hr(tags$sub("4/24/23 Version: 1")),
@@ -97,50 +92,51 @@ ui <- fluidPage(theme = shinytheme("yeti"),
               ),
             ),
             
-        tabPanel("download",
-                 fluidRow(
-                   column(2,
-                          selectInput("Analyte",
-                                      "Analyte:",
-                                      c("Select",
-                                        unique(as.character(data_frame$Analyte))))
-                   ),
-                   column(2,
-                          selectInput("Index",
-                                      "Index:",
-                                      c("Select",
-                                        unique(as.character(data_frame$Index))))
-                   ),
-                   column(2,
-                          selectInput("Biointegrity_goal",
-                                      "Biointegrity Goal:",
-                                      c("Select",
-                                        unique(as.character(data_frame$Biointegrity_goal))))
-                   ),
-                   column(2,
-                          selectInput("Probability",
-                                      "Probability:",
-                                      c("Select",
-                                        unique(as.character(data_frame$Probability))))
-                   ),
-                   column(2,
-                          selectInput("Climatic_condition",
-                                      "Climatic Condition:",
-                                      c("Select",
-                                        unique(as.character(data_frame$Climatic_condition))))
-                   ),
-                   column(2,
-                          selectInput("Season",
-                                      "Season:",
-                                      c("Select",
-                                        unique(as.character(data_frame$Season))))
-                   ),
-                   actionButton(inputId = "filter2", label = "Filter Data"),
-                   
-                   #Create a new rows for the map & table.
-                   fluidRow(
-                     DT::dataTableOutput("table2"))
-                   ),
+      tabPanel("download",
+               fluidRow(
+                 column(2,
+                        selectInput("Analyte2",
+                                    "Analyte:",
+                                    c("Select",
+                                      unique(as.character(data_frame$Analyte))),
+                                    multiple = TRUE)
+                 ),
+                 column(2,
+                        selectInput("Index2",
+                                    "Index:",
+                                    c("Select",
+                                      unique(as.character(data_frame$Index))))
+                 ),
+                 column(2,
+                        selectInput("Biointegrity_goal2",
+                                    "Biointegrity Goal:",
+                                    c("Select",
+                                      unique(as.character(data_frame$Biointegrity_goal))))
+                 ),
+                 column(2,
+                        selectInput("Probability2",
+                                    "Probability:",
+                                    c("Select",
+                                      unique(as.character(data_frame$Probability))))
+                 ),
+                 column(2,
+                        selectInput("Climatic_condition2",
+                                    "Climatic Condition:",
+                                    c("Select",
+                                      unique(as.character(data_frame$Climatic_condition))))
+                 ),
+                 column(2,
+                        selectInput("Season2",
+                                    "Season:",
+                                    c("Select",
+                                      unique(as.character(data_frame$Season))))
+                 ),
+                actionButton(inputId = "filter2", label = "Filter Data"),
+                 
+               #Create a new rows for the map & table.
+               fluidRow(
+                 DT::dataTableOutput("table2"))
+               ),
         ),
       ),
     ),
@@ -169,46 +165,43 @@ server <- function(input, output) {
       data_frame <- data_frame[data_frame$Season == input$Season,]
     }
   })
-#for the download tab  
-  getData2 <- eventReactive(eventExpr = input$filter2, valueExpr = {
-    if (input$Analyte != "Select") {
-      data_frame <- data_frame[data_frame$Analyte == input$Analyte,]
-    }
-    if (input$Index != "Select") {
-      data_frame <- data_frame[data_frame$Index == input$Index,]
-    }
-    if (input$Biointegrity_goal != "Select") {
-      data_frame <- data_frame[data_frame$Biointegrity_goal == input$Biointegrity_goal,]
-    }
-    if (input$Probability != "Select") {
-      data_frame <- data_frame[data_frame$Probability == input$Probability,]
-    }
-    if (input$Climatic_condition != "Select") {
-      data_frame <- data_frame[data_frame$Climatic_condition == input$Climatic_condition,]
-    }
-    if (input$Season != "Select") {
-      data_frame <- data_frame[data_frame$Season == input$Season,]
-    }
-  })
-  
-
-
-# render visualization table based on filter
+  # render visualization table based on filter
   output$table <- DT::renderDataTable({DT::datatable(
     getData(),
     options = list(
       scrollX =TRUE,
       scrollY = "175px",
       dom = 'lrtip')
-    )
+  )
   })
   
+#for the download tab  
+  getData2 <- eventReactive(eventExpr = input$filter2, valueExpr = {
+    if (input$Analyte != "Select") {
+      data_frame <- data_frame[data_frame$Analyte %in% input$Analyte2,]
+    }
+    if (input$Index != "Select") {
+      data_frame <- data_frame[data_frame$Index == input$Index2,]
+    }
+    if (input$Biointegrity_goal != "Select") {
+      data_frame <- data_frame[data_frame$Biointegrity_goal == input$Biointegrity_goal2,]
+    }
+    if (input$Probability != "Select") {
+      data_frame <- data_frame[data_frame$Probability == input$Probability2,]
+    }
+    if (input$Climatic_condition != "Select") {
+      data_frame <- data_frame[data_frame$Climatic_condition == input$Climatic_condition2,]
+    }
+    if (input$Season != "Select") {
+      data_frame <- data_frame[data_frame$Season == input$Season2,]
+    }
+  })
 # render download table based on filter
   output$table2 <- DT::renderDataTable({DT::datatable(
     getData2(),
     options = list(
       scrollX =TRUE,
-      scrollY = "175px",
+      scrollY = "500px",
       dom = 'lrtip')
   )
   })
