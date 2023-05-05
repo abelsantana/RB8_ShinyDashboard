@@ -12,6 +12,8 @@ library(shinythemes)
 
 # Load data (look for download link in ReadMe file if needed)
 d1 <- as.data.frame(load("SA_Thresh_FINAL2.RData", envir = globalenv()))
+#fix problem with new datset
+#d1 <- as.data.frame(load("SA_Thresh_FINAL3.RData", envir = globalenv()))
 nhd <- st_read("NHD_Ca.geojson")
 
 # Define UI
@@ -24,11 +26,16 @@ ui <- fluidPage(theme = shinytheme("yeti"),
                tags$div(
                  h1("Salinization thresholds for the Santa Ana Watershed", align = "center"),
                  hr(tags$sub("4/24/23 Version: 1")),
-                 p("Project Description Goes Here", align = "left"),
-                             ),
-                             ),
+                 p("Salinization is a growing threat to aquatic life in streams in the Santa Ana region by disrupting organisms’ physiological processes and increasing sensitivity to other contaminants. Plans to increase wastewater recycling, as well as continued reliance on water diverted from the Colorado River, are likely to increase ionic concentrations in streams with urban or agricultural land use."),
+
+p("Because stream salinity can vary due to natural factors, such as geology and climate, we developed models to predict natural background levels of ionic parameters. Because these models are dynamic, they can reflect changes in natural levels associated with variation in season and annual precipitation. Application of the models to streams in the Santa Ana watershed show considerable spatial variation, with the lowest salinity levels typically being observed in the high elevation headwaters of the Santa Ana, San Bernardino, San Jacinto, and San Gabriel mountains. Deviations from modeled expectations can be used to identify streams where salinization has occurred. We found evidence of widespread salinization areas with urban or agricultural land use, such as the lower elevations of coastal Orange County and the Inland Empire."),
+
+p("Biological response models based on biointegrity indices (specifically the California Stream Condition Index [CSCI] for benthic invertebrates and the Algal Stream Condition Indices [ASCIs]) showed that elevated ionic concentrations were associated with poor biological conditions. These models can support the identification of thresholds for ionic parameters that provide a high level of probability of protecting stream biointegrity. We identified reach-specific thresholds for all studied parameters (except Magnesium). These thresholds could be adjusted to account for season, as well as for drought or years with high levels of precipitation. These thresholds can be used to assess stressors on sites, prioritize sites for restoration or additional investigation, or in causal assessments."), 
+       )
+       ),
+       
       
-      tabPanel("visualize data",
+      tabPanel("Visualize Data",
                 tags$div(
                 h1("Salinization thresholds for the Santa Ana Watershed", align = "center"),
                 hr(tags$sub("4/24/23 Version: 1")),
@@ -92,7 +99,10 @@ ui <- fluidPage(theme = shinytheme("yeti"),
               ),
             ),
             
-      tabPanel("download",
+      tabPanel("Filter Data",
+               tags$div(
+                 h1("Salinization thresholds for the Santa Ana Watershed", align = "center"),
+               ),
                fluidRow(
                  column(2,
                         selectInput("Analyte2",
@@ -105,39 +115,52 @@ ui <- fluidPage(theme = shinytheme("yeti"),
                         selectInput("Index2",
                                     "Index:",
                                     c("Select",
-                                      unique(as.character(data_frame$Index))))
+                                      unique(as.character(data_frame$Index))),
+                        multiple = TRUE)
                  ),
                  column(2,
                         selectInput("Biointegrity_goal2",
                                     "Biointegrity Goal:",
                                     c("Select",
-                                      unique(as.character(data_frame$Biointegrity_goal))))
+                                      unique(as.character(data_frame$Biointegrity_goal))),
+                        multiple = TRUE)
                  ),
                  column(2,
                         selectInput("Probability2",
                                     "Probability:",
                                     c("Select",
-                                      unique(as.character(data_frame$Probability))))
+                                      unique(as.character(data_frame$Probability))),
+                        multiple = TRUE)
                  ),
                  column(2,
                         selectInput("Climatic_condition2",
                                     "Climatic Condition:",
                                     c("Select",
-                                      unique(as.character(data_frame$Climatic_condition))))
+                                      unique(as.character(data_frame$Climatic_condition))),
+                        multiple = TRUE)
                  ),
                  column(2,
                         selectInput("Season2",
                                     "Season:",
                                     c("Select",
-                                      unique(as.character(data_frame$Season))))
-                 ),
+                                      unique(as.character(data_frame$Season))),
+                        multiple = TRUE),
+                 
                 actionButton(inputId = "filter2", label = "Filter Data"),
                  
                #Create a new rows for the map & table.
                fluidRow(
                  DT::dataTableOutput("table2"))
+                  ),
                ),
         ),
+tabPanel("Datasets",
+         tags$div(
+           h1("Salinization thresholds for the Santa Ana Watershed", align = "center"),
+           p("Download full datasets here"),
+           tags$a(href="https://ftp.sccwrp.org/pub/download/PROJECTS/SCCWRP_Bio/Part3_intion_thresholds_shinyapp_summary_COMID.csv", "Thresholds Dataset"),
+         )
+),
       ),
     ),
 )
@@ -173,7 +196,7 @@ server <- function(input, output) {
       scrollY = "175px",
       dom = 'lrtip')
   )
-  })
+  }) 
   
 #for the download tab  
   getData2 <- eventReactive(eventExpr = input$filter2, valueExpr = {
@@ -181,19 +204,19 @@ server <- function(input, output) {
       data_frame <- data_frame[data_frame$Analyte %in% input$Analyte2,]
     }
     if (input$Index != "Select") {
-      data_frame <- data_frame[data_frame$Index == input$Index2,]
+      data_frame <- data_frame[data_frame$Index %in% input$Index2,]
     }
     if (input$Biointegrity_goal != "Select") {
-      data_frame <- data_frame[data_frame$Biointegrity_goal == input$Biointegrity_goal2,]
+      data_frame <- data_frame[data_frame$Biointegrity_goal %in% input$Biointegrity_goal2,]
     }
     if (input$Probability != "Select") {
-      data_frame <- data_frame[data_frame$Probability == input$Probability2,]
+      data_frame <- data_frame[data_frame$Probability %in% input$Probability2,]
     }
     if (input$Climatic_condition != "Select") {
-      data_frame <- data_frame[data_frame$Climatic_condition == input$Climatic_condition2,]
+      data_frame <- data_frame[data_frame$Climatic_condition %in% input$Climatic_condition2,]
     }
     if (input$Season != "Select") {
-      data_frame <- data_frame[data_frame$Season == input$Season2,]
+      data_frame <- data_frame[data_frame$Season %in% input$Season2,]
     }
   })
 # render download table based on filter
@@ -205,7 +228,7 @@ server <- function(input, output) {
       dom = 'lrtip')
   )
   })
-  
+
 #render map based on filter
   output$map <- renderLeaflet({
     od <- getData()#make a dataframe from filtered data for joining
