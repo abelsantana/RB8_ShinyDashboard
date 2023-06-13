@@ -21,7 +21,7 @@ ui <- fluidPage(theme = shinytheme("yeti"),
                     tabPanel("Project Description",
                              tags$div(
                                h1("Salinization thresholds for the Santa Ana Watershed", align = "center"),
-                               hr(tags$sub("4/24/23 Version: 1")),
+                               hr(tags$sub("6/13/23 Version: 2")),
                                p("This dashboard is intended to help managers interpret models and identify aquatic life thresholds for ionic parameters for wadeable streams in the Santa Ana watershed. "),
                                
                                p("Salinization is a growing threat to aquatic life in streams in the Santa Ana region by disrupting organisms’ physiological processes and increasing sensitivity to other contaminants. Plans to increase wastewater recycling, as well as continued reliance on water diverted from the Colorado River, are likely to increase ionic concentrations in streams with urban or agricultural land use."),
@@ -30,6 +30,7 @@ ui <- fluidPage(theme = shinytheme("yeti"),
                                
                                p("Details about this study are provided in a report to the Regional Water Quality Control Board, Santa Ana Region: Assessing the Influence of Salinization on Aquatic Life in Santa Ana Region Wadeable Streams (SCCWRP Technical Report #1324). For additional information, contact Raphael Mazor (raphaelm@sccwrp.org) or Jan Walker (janw@sccwrp.org) 
 "), 
+                              p("Expected updates coming July 31, 2023"),
                              )
                     ),
                     
@@ -37,7 +38,6 @@ ui <- fluidPage(theme = shinytheme("yeti"),
                     tabPanel("Visualize Data",
                              tags$div(
                                tags$h1("Salinization thresholds for the Santa Ana Watershed", align = "center"),
-                               tags$hr(tags$sub("4/24/23 Version: 1")),
                                tags$p("This dashboard is intended to help support waterboard staff identify thresholds for ionic parameters based on biological response models. Users should select one item from each drop-down menu, and then push the filter button. A map showing average thresholds for each segment in the Santa Ana watershed will be rendered, along with a table containing the plotted data."),
                                
                                tags$h4("Parameters:", style = "text-align: left;"),
@@ -218,9 +218,15 @@ ui <- fluidPage(theme = shinytheme("yeti"),
             ),
           #Create a new rows for the table.
           fluidRow(
-            column(2,
+            column(
                    DT::dataTableOutput("table2"), width = 12)
-      ),
+      )
+    ),
+    # Button to download data
+    fluidRow(
+      column(3,
+             shinyjs::hidden(
+               downloadButton("downloadData2", "Download")))
     ),
   ),             
       tabPanel("Download Datasets",
@@ -260,7 +266,8 @@ ui <- fluidPage(theme = shinytheme("yeti"),
                  tags$p(
                    "We provide the full datasets used for each analysis in our report to the Regional Water Quality Control Board, Santa Ana Region: Assessing the Influence of Salinization on Aquatic Life in Santa Ana Region Wadeable Streams (SCCWRP Technical Report #1324). Each dataset corresponds to a section of the report."
                  ),
-                 tags$a(href = "link_to_report", "Link to Report"),
+                 #tags$a(href = "link_to_report", "Download Report"),
+                 p("Report Coming soon"),
                  tags$div(
                    class = "section-title",
                    "PART 1"
@@ -274,13 +281,15 @@ ui <- fluidPage(theme = shinytheme("yeti"),
                      "Dynamic climate data"),
                  
                  tags$p("1-, 2-, 3-, 6-, and 12-month antecedent precipitation totals and mean temperatures for every COMID in California for the years 2001 to 2019. These data were used as predictors in models of natural background levels of ionic parameters."),
+                 #tags$a(href = "link_to_report", "Dynamic climate data"),
+                 p("Data coming soon"),
                    tags$div(
                      class = "data-description",
                      "Observed chemistry data"),
                  
                      tags$p(  "Nation-wide ionic parameter data. These data were used to calibrate models of natural background levels of ionic parameters."
                        ),
-
+                 tags$a(href = "https://ftp.sccwrp.org/pub/download/PROJECTS/SCCWRP_Bio/RB8IONApp/California_Chemistry_Obs_RefNoRef.xlsx", "Observed chemistry data"),
                  tags$div(
                    class = "data-description",
                    "StreamCat"),
@@ -296,6 +305,14 @@ ui <- fluidPage(theme = shinytheme("yeti"),
                    class = "data-description",
                    "California predictions"),
                  tags$p("Expected predictions for all California COMIDs for each analyte, one row per month from 2001 to 2019."),
+                 tags$a(href = "https://ftp.sccwrp.org/pub/download/PROJECTS/SCCWRP_Bio/RB8IONApp/TDS.zip", "TDS, "),                 
+                 tags$a(href = "https://ftp.sccwrp.org/pub/download/PROJECTS/SCCWRP_Bio/RB8IONApp/Sulfate.zip", "Sulfate, "),
+                 tags$a(href = "https://ftp.sccwrp.org/pub/download/PROJECTS/SCCWRP_Bio/RB8IONApp/Specific_Conductivity.zip", "Specific Conductivity, "),
+                 tags$a(href = "https://ftp.sccwrp.org/pub/download/PROJECTS/SCCWRP_Bio/RB8IONApp/Sodium.zip", "Sodium, "),
+                 tags$a(href = "https://ftp.sccwrp.org/pub/download/PROJECTS/SCCWRP_Bio/RB8IONApp/Magnesium.zip", "Magnesium, "),
+                 tags$a(href = "https://ftp.sccwrp.org/pub/download/PROJECTS/SCCWRP_Bio/RB8IONApp/Hardness.zip", "Hardness, "),
+                 tags$a(href = "https://ftp.sccwrp.org/pub/download/PROJECTS/SCCWRP_Bio/RB8IONApp/Chloride.zip", "Chloride, "),
+                 tags$a(href = "https://ftp.sccwrp.org/pub/download/PROJECTS/SCCWRP_Bio/RB8IONApp/Alkalinity.zip", "Alkalinity"),
                  
                  tags$div(
                    class = "section-title",
@@ -307,7 +324,7 @@ ui <- fluidPage(theme = shinytheme("yeti"),
                    class = "data-description",
                    "Biological data"),
                     tags$p("CSCI and ASCI scores for sites in California, and accompanying water quality data. These data were used to calibrate biological response models.",
-                 tags$a(href = "https://sccwrp.sharepoint.com/:x:/s/RB8IonicImpactstoBiointegrity/EVawo2CY4vhMoVBCe_Fig08ByLZVnV-bJKM2GCLBlJ5mHA?e=8vjjQ4", "Download here"),
+                 tags$a(href = "https://ftp.sccwrp.org/pub/download/PROJECTS/SCCWRP_Bio/RB8IONApp/Final_dataset_4-26-23-2.xlsx", "Download here"),
                  "."
                     ),
                  tags$div(
@@ -318,7 +335,7 @@ ui <- fluidPage(theme = shinytheme("yeti"),
                    class = "data-description",
                    "Santa Ana Thresholds"),
                  tags$p("Summaries of thresholds (i.e., min, max, mean, and standard deviation) for every COMID in the Santa Ana basin under different climatic and seasonal conditions.",
-                 tags$a(href = "https://sccwrp.sharepoint.com/:x:/s/RB8IonicImpactstoBiointegrity/ERyRoGnD-2hJh4YK3DdqGKABWNwvh4Ogc3NGimN5iaALHA?e=8ir5Q4", "Download here"),
+                 tags$a(href = "https://ftp.sccwrp.org/pub/download/PROJECTS/SCCWRP_Bio/RB8IONApp/SA_thresholds_shinyapp_summary_COMID.zip", "Download here"),
                  "."
                  ),
                  tags$div(
@@ -332,7 +349,7 @@ ui <- fluidPage(theme = shinytheme("yeti"),
                    class = "data-description",
                    "Integrated thresholds"),
                  tags$p("Thresholds for integrated parameters (i.e., TDS and specific conductivity) for use as proxies of individual ionic parameters (i.e., calcium, chloride, sulfate, and sodium). Thresholds are summarized (i.e., min, max, mean, and standard deviation) for every COMID in the Santa Ana basin under different climatic and seasonal conditions.",
-                        tags$a(href = "https://sccwrp.sharepoint.com/:x:/s/RB8IonicImpactstoBiointegrity/EWMxtBfwJNhOhEuPxba_BYcBtxBRgNzXwv37GYfNSw5aNQ?e=QsQluT", "Download here"),
+                        tags$a(href = "https://ftp.sccwrp.org/pub/download/PROJECTS/SCCWRP_Bio/Part3_intion_thresholds_shinyapp_summary_COMID.zip", "Download here"),
                         "."
                  ),                 
                   )
@@ -433,13 +450,20 @@ server <- function(input, output) {
   shinyjs::onclick("filter",
                    shinyjs::show(id = "downloadData"))
   output$downloadData <- downloadHandler(
-    filename = function() {
-      paste("RB8_Threshold_Data", ".csv", sep = "")
-    },
+    filename = "RB8_Visualize_Data.csv",
     content = function(file) {
       write.csv(getData(), file, row.names = FALSE)
     }
   )
+ 
+  shinyjs::onclick("filter2",
+                   shinyjs::show(id = "downloadData2"))
+  output$downloadData2 <- downloadHandler(
+    filename = "RB8_Query_Data.csv",
+    content = function(file) {
+     write.csv(getData2(), file, row.names = FALSE)
+    }
+ )
 }
 # Run the application 
 shinyApp(ui = ui, server = server)
