@@ -11,7 +11,7 @@ library(htmltools)
 library(shinythemes)
 
 # Load data (look for download link in ReadMe file if needed)
-load("SA_Thresh_Final2.RData")
+load("sa_thresh_final2.RData")
 nhd <- st_read("NHD_Ca.geojson")
 
 # Define UI
@@ -135,9 +135,14 @@ ui <- fluidPage(theme = shinytheme("yeti"),
                                ),
                                column(2,
                                       selectInput("Season",
-                                                  "Season:",
+                                                  "Season",
                                                   c("Select",
                                                     unique(as.character(data_frame$Season))))
+                               ),
+                               column(2,
+                                      selectInput("result",
+                                                  "Result",
+                                                  choices = c("E_min", "E_max", "E_avg", "E_SD", "Threshold_min", "Threshold_max", "Threshold_avg", "Threshold_SD"))
                                ),
                                actionButton(inputId = "filter", label = "Filter Data"),
                                
@@ -427,20 +432,24 @@ server <- function(input, output) {
   output$map <- renderLeaflet({
     od <- getData()#make a dataframe from filtered data for joining
     df2 <- dplyr::inner_join(nhd, od, by = "COMID", copy = TRUE) #join filtered data to the spatial data via COMID
-    binpal <- colorNumeric("magma", df2$Threshold_avg, reverse = TRUE) #set symbology parameters
+    if (is.numeric(df2[[input$result]])) {
+      binpal <- colorNumeric("magma", df2[[input$result]], reverse = TRUE)
+    } else {
+      binpal <- colorFactor("magma", df2[[input$result]])
+    }
+    #binpal <- colorNumeric("magma", df2[[input$result]], reverse = TRUE) #set symbology parameters
     leaflet(df2) %>%
       addProviderTiles(providers$Esri.WorldGrayCanvas) %>%
       addProviderTiles(providers$Stamen.TonerLabels,
                        options = providerTileOptions(opacity = 0.35)) %>%
-      addPolylines(color = ~binpal(Threshold_avg), 
+      addPolylines(color = ~binpal(df2[[input$result]]), 
                    weight = 2,
                    opacity = 100,
                    popup = ~paste("<b>COMID:</b>", COMID,
                                   "<br><b>GNIS Name:</b>", GNIS_NAME.x,
-                                  "<br><b>E Average:</b>", E_avg,
-                                  "<br><b>Threshold Average:</b>",Threshold_avg)) %>%
-      addLegend("bottomright", pal = binpal, values = ~Threshold_avg,
-                title = "Threshold <br> Average",
+                                  "<br>", input$result, ":", df2[[input$result]])) %>%
+      addLegend("bottomright", pal = binpal, values = ~df2[[input$result]],
+                title = input$result,
                 opacity = 1,
                 bins = 4,
       )
