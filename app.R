@@ -144,11 +144,13 @@ ui <- fluidPage(theme = shinytheme("yeti"),
                                                   "Result",
                                                   choices = c("E_min", "E_max", "E_avg", "E_SD", "Threshold_min", "Threshold_max", "Threshold_avg", "Threshold_SD"))
                                ),
-                               actionButton(inputId = "filter", label = "Filter Data"),
+                                 #column(3,
+                                        #actionButton(inputId = "filter", label = "Filter Data")),
                                
                                # Create a new rows for the map & table.
                                fluidRow(
                                  column(width = 12,
+                                 div(actionButton(inputId = "filter", label = "Filter Data"), style = "padding:15px"),      
                                  div(leafletOutput(outputId = "map"), style = "padding:20px;"),
                                  div(DT::dataTableOutput("table"), style = "padding: 10px;"))
                              )
@@ -361,7 +363,6 @@ ui <- fluidPage(theme = shinytheme("yeti"),
                     ),
 )
 )
-
 
 # Define server logic 
 #for the visualization tab
