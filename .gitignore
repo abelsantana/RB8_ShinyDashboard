@@ -3,7 +3,7 @@
 rsconnect/
 #data folders for app too large to add to github
 NHD_Ca.geojson
-SA_Thresh_Final2.RData
+SA_Thresh_Final3.RData
 # History files
 .Rhistory
 .Rapp.history
@@ -34,3 +34,4 @@ vignettes/*.pdf
 .Renviron
 SA_thresholds_shinyapp_summary_COMID.csv
 Utils.R
+SA_thresholds_shinyapp_summary_COMID-2.csv
